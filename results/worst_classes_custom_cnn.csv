@@ -1,0 +1,6 @@
+ClassId,SignName,precision,recall,f1,support,predicted_as,mistaken_for_it
+27,Pedestrians,0.8333,0.5,0.625,60,26: Traffic signals (22x),11: Right-of-way at next intersection (5x)
+22,Bumpy road,1.0,0.75,0.8571,120,28: Children crossing (19x),-
+30,Beware of ice/snow,0.9167,0.8067,0.8582,150,29: Bicycles crossing (15x),11: Right-of-way at next intersection (11x)
+21,Double curve,0.8864,0.8667,0.8764,90,12: Priority road (11x),18: General caution (9x)
+29,Bicycles crossing,0.8036,1.0,0.8911,90,-,30: Beware of ice/snow (15x)

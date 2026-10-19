@@ -6,6 +6,7 @@ Model definitions.
 """
 
 from tensorflow.keras import layers, models
+from tensorflow.keras.applications import MobileNetV2
 from tensorflow.keras.optimizers import Adam
 
 from src import config
@@ -45,9 +46,50 @@ def build_custom_cnn(use_batchnorm=False):
     model.add(layers.Dropout(0.5))
     model.add(layers.Dense(config.NUM_CLASSES, activation="softmax"))
 
+    _compile(model, config.LEARNING_RATE)
+    return model
+
+
+def _compile(model, learning_rate):
+    """Compile a model with Adam, categorical cross-entropy and accuracy."""
     model.compile(
-        optimizer=Adam(learning_rate=config.LEARNING_RATE),
+        optimizer=Adam(learning_rate=learning_rate),
         loss="categorical_crossentropy",
         metrics=["accuracy"],
     )
-    return model
+
+
+def build_mobilenet():
+    """
+    Build Model B: MobileNetV2 pre-trained on ImageNet, with a new classifier head.
+
+    Input (96, 96, 3) -> MobileNetV2 base (frozen)
+    -> GlobalAveragePooling2D -> Dropout(0.3) -> Dense(43, softmax)
+
+    Returns (model, base_model). base_model is needed later for fine-tuning.
+    """
+    size = config.MOBILENET_IMG_SIZE
+    base_model = MobileNetV2(weights="imagenet", include_top=False,
+                             input_shape=(size, size, config.NUM_CHANNELS))
+    base_model.trainable = False   # freeze: keep the ImageNet features unchanged at first
+
+    inputs = layers.Input(shape=(size, size, config.NUM_CHANNELS))
+    # training=False keeps the base's BatchNorm layers in inference mode,
+    # which matters when we unfreeze some layers for fine-tuning later
+    features = base_model(inputs, training=False)
+    x = layers.GlobalAveragePooling2D()(features)   # average each feature map to one number
+    x = layers.Dropout(0.3)(x)
+    outputs = layers.Dense(config.NUM_CLASSES, activation="softmax")(x)
+
+    model = models.Model(inputs, outputs, name="mobilenetv2")
+    _compile(model, config.LEARNING_RATE)
+    return model, base_model
+
+
+def unfreeze_top_layers(model, base_model, num_layers=config.FINE_TUNE_LAYERS):
+    """Unfreeze the last `num_layers` layers of the base and recompile with a small learning rate."""
+    base_model.trainable = True
+    for layer in base_model.layers[:-num_layers]:
+        layer.trainable = False
+    # A tiny learning rate nudges the pre-trained weights instead of destroying them
+    _compile(model, config.FINE_TUNE_LR)

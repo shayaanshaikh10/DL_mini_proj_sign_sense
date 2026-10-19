@@ -1,0 +1,6 @@
+ClassId,SignName,precision,recall,f1,support,predicted_as,mistaken_for_it
+27,Pedestrians,0.9677,0.5,0.6593,60,28: Children crossing (25x),25: Road work (1x)
+22,Bumpy road,1.0,0.75,0.8571,120,25: Road work (28x),-
+40,Roundabout mandatory,0.8165,0.9889,0.8945,90,38: Keep right (1x),12: Priority road (19x)
+28,Children crossing,0.8523,1.0,0.9202,150,-,27: Pedestrians (25x)
+21,Double curve,0.8738,1.0,0.9326,90,-,18: General caution (13x)

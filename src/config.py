@@ -21,8 +21,12 @@ MODELS_DIR = BASE_DIR / "models"                    # saved .keras models
 RESULTS_DIR = BASE_DIR / "results"                  # plots, tables, reports
 
 # Saved model files
-CUSTOM_CNN_PATH = MODELS_DIR / "custom_cnn.keras"
+CUSTOM_CNN_PATH = MODELS_DIR / "custom_cnn.keras"         # baseline from the brief (98.05%)
+CUSTOM_CNN_BN_PATH = MODELS_DIR / "custom_cnn_bn.keras"   # + BatchNorm (98.60%)
 MOBILENET_PATH = MODELS_DIR / "mobilenetv2.keras"
+
+# "Model A" used in the demo app and the final comparison: the BatchNorm CNN
+MODEL_A_PATH = CUSTOM_CNN_BN_PATH
 
 # ---------------------------------------------------------------
 # Dataset
@@ -49,6 +53,7 @@ LEARNING_RATE = 1e-3        # Adam learning rate
 FINE_TUNE_LR = 1e-5         # small learning rate for fine-tuning
 VAL_SPLIT = 0.2             # 20% of training data used for validation
 RANDOM_SEED = 42            # fixed seed for reproducible results
+SHUFFLE_BUFFER = 5000       # images kept in the tf.data shuffle buffer (MobileNetV2)
 
 # Callbacks
 EARLY_STOP_PATIENCE = 5     # stop if val_loss does not improve for 5 epochs
