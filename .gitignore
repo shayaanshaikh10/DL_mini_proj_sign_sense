@@ -1,0 +1,17 @@
+# Python / environment
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Dataset (too large for git; download with scripts/download_data.py)
+data/*
+!data/signnames.csv
+*.zip
+
+# Trained models (large binary files)
+models/*.keras
+models/*.h5
+
+# Secrets
+kaggle.json
