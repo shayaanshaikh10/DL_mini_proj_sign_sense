@@ -1,0 +1,6 @@
+{
+  "model": "mobilenetv2",
+  "test_accuracy": 0.883,
+  "num_test_images": 12630,
+  "num_wrong": 1478
+}

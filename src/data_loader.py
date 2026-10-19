@@ -11,6 +11,7 @@ Loading ~52,000 images takes a minute, so the result is cached in a
 """
 
 import random
+from pathlib import Path
 
 import cv2
 import matplotlib.pyplot as plt
@@ -45,13 +46,30 @@ def load_image(image_path, img_size=config.IMG_SIZE):
     return image
 
 
+def find_image_folder(folder):
+    """
+    Return the folder that actually contains the .png images.
+
+    The Kaggle zip has both "Train" and "train" (and "Test" and "test").
+    Windows treats them as one folder, but on Linux (Colab) they are two
+    different folders and the images may be in the lowercase one.
+    """
+    lowercase_folder = folder.parent / folder.name.lower()
+    for candidate in [folder, lowercase_folder]:
+        if candidate.exists() and any(candidate.rglob("*.png")):
+            return candidate
+    raise FileNotFoundError(f"No .png images found in {folder} or {lowercase_folder}. "
+                            "Run scripts/download_data.py first.")
+
+
 def _read_train_folders(img_size):
     """Read every image in Train/<class_id>/ and return (X, y) arrays."""
+    train_dir = find_image_folder(config.TRAIN_DIR)
     images = []
     labels = []
     # Sort numerically: 0, 1, 2, ... 42 (alphabetical would give 0, 1, 10, 11, ...)
     for class_id in range(config.NUM_CLASSES):
-        class_folder = config.TRAIN_DIR / str(class_id)
+        class_folder = train_dir / str(class_id)
         for image_path in sorted(class_folder.glob("*.png")):
             images.append(load_image(image_path, img_size))
             labels.append(class_id)
@@ -63,10 +81,11 @@ def _read_train_folders(img_size):
 def _read_test_csv(img_size):
     """Read every test image listed in Test.csv and return (X, y) arrays."""
     test_df = pd.read_csv(config.TEST_CSV)
+    test_dir = find_image_folder(config.TEST_DIR)
     images = []
-    # Paths in Test.csv look like "Test/00000.png", relative to data/
+    # Paths in Test.csv look like "Test/00000.png"; we only need the file name
     for relative_path in test_df["Path"]:
-        images.append(load_image(config.DATA_DIR / relative_path, img_size))
+        images.append(load_image(test_dir / Path(relative_path).name, img_size))
     labels = test_df["ClassId"].to_numpy(dtype=np.int64)
     return np.array(images, dtype=np.uint8), labels
 
@@ -75,12 +94,15 @@ def _load_with_cache(split_name, read_function, img_size):
     """Load (X, y) from a .npz cache if it exists, otherwise read images and save the cache."""
     cache_path = config.DATA_DIR / f"cache_{split_name}_{img_size}.npz"
     if cache_path.exists():
-        print(f"Loading {split_name} data from cache: {cache_path.name}")
         cached = np.load(cache_path)
-        return cached["X"], cached["y"]
+        if len(cached["y"]) > 0:   # ignore a broken (empty) cache from a failed run
+            print(f"Loading {split_name} data from cache: {cache_path.name}")
+            return cached["X"], cached["y"]
 
     print(f"Reading {split_name} images from disk (first time only)...")
     X, y = read_function(img_size)
+    if len(y) == 0:
+        raise ValueError(f"No {split_name} images were loaded. Check the data/ folder.")
     np.savez_compressed(cache_path, X=X, y=y)
     return X, y
 

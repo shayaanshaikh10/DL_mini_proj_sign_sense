@@ -1,0 +1,44 @@
+ClassId,SignName,precision,recall,f1,support
+0,Speed limit (20 km/h),0.75,0.45,0.5625,60
+1,Speed limit (30 km/h),0.9455,0.7472,0.8348,720
+2,Speed limit (50 km/h),0.6287,0.9507,0.7569,750
+3,Speed limit (60 km/h),0.8119,0.7,0.7518,450
+4,Speed limit (70 km/h),0.9189,0.8924,0.9055,660
+5,Speed limit (80 km/h),0.8947,0.7286,0.8031,630
+6,End of speed limit (80 km/h),1.0,0.7,0.8235,150
+7,Speed limit (100 km/h),0.7849,0.8756,0.8277,450
+8,Speed limit (120 km/h),0.8381,0.9089,0.8721,450
+9,No passing,0.9766,0.9562,0.9663,480
+10,No passing for vehicles over 3.5 t,0.9877,0.9773,0.9825,660
+11,Right-of-way at next intersection,0.933,0.9619,0.9472,420
+12,Priority road,0.9985,0.9899,0.9942,690
+13,Yield,0.9944,0.9861,0.9902,720
+14,Stop,0.9963,1.0,0.9982,270
+15,No vehicles,1.0,0.9905,0.9952,210
+16,Vehicles over 3.5 t prohibited,0.9419,0.9733,0.9574,150
+17,No entry,1.0,0.9889,0.9944,360
+18,General caution,0.9251,0.9179,0.9215,390
+19,Dangerous curve to the left,0.7213,0.7333,0.7273,60
+20,Dangerous curve to the right,0.8947,0.7556,0.8193,90
+21,Double curve,0.5804,0.7222,0.6436,90
+22,Bumpy road,0.9474,0.75,0.8372,120
+23,Slippery road,0.6215,0.8867,0.7308,150
+24,Road narrows on the right,1.0,0.8889,0.9412,90
+25,Road work,0.8839,0.9354,0.9089,480
+26,Traffic signals,0.9321,0.8389,0.883,180
+27,Pedestrians,0.825,0.55,0.66,60
+28,Children crossing,0.8732,0.8267,0.8493,150
+29,Bicycles crossing,0.7353,0.8333,0.7812,90
+30,Beware of ice/snow,0.9231,0.48,0.6316,150
+31,Wild animals crossing,0.9038,0.9741,0.9376,270
+32,End of all speed and passing limits,0.9825,0.9333,0.9573,60
+33,Turn right ahead,0.9755,0.7571,0.8525,210
+34,Turn left ahead,0.8561,0.9917,0.9189,120
+35,Ahead only,0.9145,0.9051,0.9098,390
+36,Go straight or right,0.971,0.5583,0.709,120
+37,Go straight or left,0.3719,0.75,0.4972,60
+38,Keep right,0.9127,0.9696,0.9403,690
+39,Keep left,0.9701,0.7222,0.828,90
+40,Roundabout mandatory,0.8857,0.6889,0.775,90
+41,End of no passing,0.7812,0.8333,0.8065,60
+42,End of no passing by vehicles over 3.5 t,0.7742,0.8,0.7869,90

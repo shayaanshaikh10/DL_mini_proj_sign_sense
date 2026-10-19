@@ -1,0 +1,6 @@
+ClassId,SignName,precision,recall,f1,support,predicted_as,mistaken_for_it
+37,Go straight or left,0.3719,0.75,0.4972,60,2: Speed limit (50 km/h) (3x),36: Go straight or right (33x)
+0,Speed limit (20 km/h),0.75,0.45,0.5625,60,2: Speed limit (50 km/h) (18x),4: Speed limit (70 km/h) (5x)
+30,Beware of ice/snow,0.9231,0.48,0.6316,150,25: Road work (18x),13: Yield (3x)
+21,Double curve,0.5804,0.7222,0.6436,90,19: Dangerous curve to the left (12x),20: Dangerous curve to the right (12x)
+27,Pedestrians,0.825,0.55,0.66,60,28: Children crossing (15x),25: Road work (4x)
