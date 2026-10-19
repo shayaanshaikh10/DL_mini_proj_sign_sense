@@ -1,6 +1,7 @@
 # SignSense dependencies (Python 3.10 / 3.11)
 # TensorFlow 2.16 works on Windows (CPU) and Colab (GPU)
 tensorflow>=2.15,<2.17
+tensorflow-intel==2.16.2 ; sys_platform == "win32"   # Windows only: the real TF code
 numpy>=1.23,<2.0
 pandas>=2.0,<3.0
 opencv-python>=4.8,<5.0
