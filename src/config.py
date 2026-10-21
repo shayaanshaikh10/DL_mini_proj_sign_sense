@@ -25,7 +25,9 @@ CUSTOM_CNN_PATH = MODELS_DIR / "custom_cnn.keras"         # baseline from the br
 CUSTOM_CNN_BN_PATH = MODELS_DIR / "custom_cnn_bn.keras"   # + BatchNorm (98.60%)
 MOBILENET_PATH = MODELS_DIR / "mobilenetv2.keras"
 
-# "Model A" used in the demo app and the final comparison: the BatchNorm CNN
+# Models used in the demo app and the final comparison
+MODEL_A_NAME = "custom_cnn_bn"   # Model A: custom CNN + BatchNorm (best, 98.60%)
+MODEL_B_NAME = "mobilenetv2"     # Model B: MobileNetV2 transfer learning (88.30%)
 MODEL_A_PATH = CUSTOM_CNN_BN_PATH
 
 # ---------------------------------------------------------------
