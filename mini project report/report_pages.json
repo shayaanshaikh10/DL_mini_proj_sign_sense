@@ -1,0 +1,20 @@
+﻿{
+    "1. Introduction":  1,
+    "1.1 Motivation":  1,
+    "1.2 Background":  1,
+    "2. Problem Statement":  1,
+    "2.1 Objectives":  1,
+    "2.2 Dataset":  2,
+    "3. Proposed System":  3,
+    "3.1 Block diagram, its description and working":  3,
+    "3.2 Module Description":  4,
+    "4. Implementation Result and Analysis":  4,
+    "4.1 Implementation Screenshots":  5,
+    "4.2 Training and Test Results":  5,
+    "4.3 Comparison of Model A and Model B":  6,
+    "4.4 Error Analysis":  7,
+    "5. Code":  8,
+    "6. Conclusion":  10,
+    "6.1 Limitations and Future Scope":  11,
+    "References":  11
+}

@@ -58,19 +58,33 @@ def collect_model_row(model_info):
         "Input size": model_info["input"],
         "Params": model.count_params(),
         "Train time (min)": round(history["train_time_sec"] / 60, 1),
-        "Hardware": model_info["hardware"],
+        # Newer history files record the hardware themselves; older ones use the label above
+        "Hardware": history.get("hardware", model_info["hardware"]),
         "Best val accuracy (%)": round(max(history["val_accuracy"]) * 100, 2),
         "Test accuracy (%)": round(metrics["test_accuracy"] * 100, 2),
         "Model file (MB)": round(model_path.stat().st_size / 1e6, 1),
     }
 
 
+def _is_trained(model_info):
+    """True if the model file and its metrics file both exist."""
+    name = model_info["name"]
+    return ((config.MODELS_DIR / f"{name}.keras").exists()
+            and (config.RESULTS_DIR / f"metrics_{name}.json").exists())
+
+
 def build_comparison_table():
-    """Build the comparison DataFrame for all models (including MobileNetV2 run 1)."""
-    rows = [collect_model_row(info) for info in MODELS]
-    # MobileNetV2 run 1 has the same architecture, so the same parameter count
-    run1 = dict(MOBILENET_RUN1, Params=rows[-1]["Params"])
-    rows.insert(2, run1)
+    """Build the comparison DataFrame for every trained model (plus MobileNetV2 run 1)."""
+    rows = []
+    for info in MODELS:
+        if _is_trained(info):
+            rows.append(collect_model_row(info))
+        else:
+            print(f"Skipping {info['name']}: not trained or not evaluated yet")
+
+    if rows and rows[-1]["Model"].startswith("MobileNetV2"):
+        # Run 1 has the same architecture as run 2, so the same parameter count
+        rows.insert(len(rows) - 1, dict(MOBILENET_RUN1, Params=rows[-1]["Params"]))
     return pd.DataFrame(rows)
 
 

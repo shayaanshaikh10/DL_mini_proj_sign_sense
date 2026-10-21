@@ -10,5 +10,6 @@ Pillow>=10.0
 matplotlib>=3.7,<4.0
 seaborn>=0.13,<0.14
 streamlit>=1.30,<2.0
+starlette<1.0          # Starlette 1.x breaks image display in Streamlit 1.60
 kaggle>=1.6
 jupyter

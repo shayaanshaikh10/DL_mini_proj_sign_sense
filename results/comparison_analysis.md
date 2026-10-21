@@ -34,7 +34,7 @@ and Pedestrians by a negligible 0.001).
 2. **Position matters for traffic signs.** MobileNetV2's head uses GlobalAveragePooling, which
    averages each feature map over the whole image and loses *where* a feature is. "Keep left" and
    "Keep right" contain the same parts in different places. Run 1 confused them 64 times; even after
-   fine-tuning, "Go straight or left" is predicted as "Go straight or right" 33 times. The custom
+   fine-tuning, "Go straight or right" is predicted as "Go straight or left" 33 times. The custom
    CNN uses Flatten, which keeps spatial layout.
 3. **Fine-tuning is essential.** With the base frozen, validation accuracy stalled around 76-77%.
    As soon as 60 layers were unfrozen, it jumped to about 97% (see `curves_mobilenetv2.png`).

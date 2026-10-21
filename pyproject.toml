@@ -25,4 +25,6 @@ dependencies = [
 [tool.uv]
 # Newer versions of this TensorFlow helper have no Windows wheels.
 # 0.31.0 is the last version that installs on Windows (and Linux/Colab).
-constraint-dependencies = ["tensorflow-io-gcs-filesystem==0.31.0"]
+# Starlette 1.x breaks image serving in Streamlit 1.60 (images show as "0"),
+# so we stay on Starlette 0.x.
+constraint-dependencies = ["tensorflow-io-gcs-filesystem==0.31.0", "starlette<1.0"]

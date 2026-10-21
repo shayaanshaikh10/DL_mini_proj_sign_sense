@@ -15,6 +15,7 @@ import argparse
 import json
 import time
 
+import tensorflow as tf
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
 
 from src import config
@@ -47,6 +48,7 @@ def save_history(history_dict, train_time_sec, save_path):
     """Save per-epoch metrics and total training time to a JSON file."""
     history_dict = {key: [float(v) for v in values] for key, values in history_dict.items()}
     history_dict["train_time_sec"] = round(train_time_sec, 1)
+    history_dict["hardware"] = "GPU" if tf.config.list_physical_devices("GPU") else "CPU"
     with open(save_path, "w") as file:
         json.dump(history_dict, file, indent=2)
     print(f"History saved to {save_path}")
