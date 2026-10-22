@@ -20,8 +20,8 @@ it with transfer learning using MobileNetV2 pre-trained on ImageNet. The custom 
 normalization achieved 98.60% accuracy on the official test set using only 487,000 parameters.
 MobileNetV2 reached 88.30% after fine-tuning its top 60 layers, and only 66.75% with light
 fine-tuning. Error analysis shows that most mistakes involve triangular warning signs with
-small, similar symbols and rare classes. A Streamlit web application lets users upload a sign
-image and see the predicted class, confidence and top-3 predictions.
+small, similar symbols and rare classes. A Streamlit web application shows the predicted
+class, confidence and top-3 predictions for unseen test images.
 
 *(about 150 words)*
 
@@ -62,7 +62,7 @@ an easy-to-use demo.
 2. Build a second model using transfer learning (MobileNetV2) and compare it with the custom CNN.
 3. Evaluate properly: accuracy and loss curves, confusion matrix, per-class precision, recall
    and F1, and analysis of wrong predictions.
-4. Build a web demo where a user uploads a sign image and gets the predicted sign and confidence.
+4. Build a web demo that shows the predicted sign and its confidence for test images.
 5. Produce clean, documented and reproducible code.
 
 **Outcome:** all objectives were met. The custom CNN reached 98.05% (baseline) and 98.60%
@@ -322,14 +322,17 @@ stretch goal. Batch normalization improved the baseline from 98.05% to 98.60%. M
 learning reached 88.30% after fine-tuning, showing that pre-trained ImageNet features do not
 transfer well to tiny, low-resolution sign images and that fine-tuning is essential. Error analysis
 showed that the remaining mistakes come mainly from triangular warning signs with similar symbols,
-rare classes and poor image quality. A Streamlit web app demonstrates the model on uploaded images
-with confidence scores and top-3 predictions.
+rare classes and poor image quality. A Streamlit web app demonstrates the model on unseen test
+images with confidence scores and top-3 predictions.
 
 ---
 
 ## 11. Limitations and Future Scope
 
 **Limitations**
+- The models only know the **43 GTSRB classes**. A sign from outside these classes (for
+  example a sign used only in other countries) is still forced into the closest known class,
+  often with high confidence. For this reason the demo app uses test images only.
 - The models classify **already cropped** sign images. They cannot find a sign inside a full
   street photo.
 - Trained only on German signs; signs from other countries (for example India) look different.

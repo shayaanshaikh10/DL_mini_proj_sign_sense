@@ -47,7 +47,7 @@ def main():
     ax.axis("off")
 
     # Row 1 (left to right): input -> preprocessing -> augmentation -> classifier
-    draw_box(ax, 0.1, 2.5, 2.3, 1.4, "Input image", ["GTSRB dataset (43 classes)", "or image uploaded in app"])
+    draw_box(ax, 0.1, 2.5, 2.3, 1.4, "Input image", ["GTSRB dataset (43 classes)", "or test image in the app"])
     draw_box(ax, 2.9, 2.5, 2.5, 1.4, "Preprocessing", ["OpenCV: BGR to RGB", "Resize 32x32 / 96x96", "Scale pixels, one-hot labels"])
     draw_box(ax, 5.9, 2.5, 2.5, 1.4, "Data augmentation", ["Training images only", "Rotate, zoom, shift, shear", "No flips"])
 

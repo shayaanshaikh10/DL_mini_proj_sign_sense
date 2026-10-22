@@ -12,12 +12,12 @@ from pathlib import Path
 
 import pandas as pd
 import streamlit as st
-from PIL import Image, UnidentifiedImageError
+from PIL import Image
 
 # Make "src" importable (Streamlit runs this file from the app/ folder)
 sys.path.append(str(Path(__file__).resolve().parent.parent))
 from src import config
-from src.data_loader import find_image_folder
+from src.data_loader import find_image_folder, load_sign_names
 from src.predict import get_model, predict_image
 
 # Dropdown label -> saved model name
@@ -65,11 +65,11 @@ def show_reference_sign(class_id):
 # ---------------------------------------------------------------
 st.set_page_config(page_title="SignSense", page_icon=":material/traffic:")
 st.title(":material/traffic: SignSense")
-st.write("Upload a photo of a German traffic sign and a deep learning model "
-         "will tell you which of the 43 sign types it is.")
+st.write("Pick a random image from the GTSRB test set (12,630 German traffic signs the model "
+         "never saw during training) and see which of the 43 sign types the model predicts.")
 
 # ---------------------------------------------------------------
-# Sidebar: model choice and a random test image
+# Sidebar: model choice
 # ---------------------------------------------------------------
 with st.sidebar:
     st.header("Settings")
@@ -79,33 +79,24 @@ with st.sidebar:
     if accuracy is not None:
         st.caption(f"Test accuracy: {accuracy:.2%} on 12,630 images")
 
-    st.divider()
-    samples = load_test_samples()
-    if samples and st.button("Try a random test image", icon=":material/shuffle:"):
-        st.session_state["sample"] = random.choice(samples)
-    st.caption("Tip: the models expect a cropped sign, like the GTSRB images, "
-               "not a full street scene.")
-
 # ---------------------------------------------------------------
-# Choose the input image: an upload wins over a random sample
+# Choose a random test image (only images from the 43 known classes,
+# so the true label is always known and shown next to the prediction)
 # ---------------------------------------------------------------
-uploaded_file = st.file_uploader("Upload a sign image", type=["png", "jpg", "jpeg", "ppm"])
-true_class_id = None
-
-if uploaded_file is not None:
-    image_source = uploaded_file
-elif "sample" in st.session_state:
-    image_source, true_class_id = st.session_state["sample"]
-else:
-    st.info("Upload an image, or use **Try a random test image** in the sidebar.",
-            icon=":material/upload:")
+samples = load_test_samples()
+if not samples:
+    st.error("Test images not found. Run `python scripts/download_data.py` first.")
     st.stop()
 
-try:
-    image = Image.open(image_source).convert("RGB")
-except (UnidentifiedImageError, OSError):
-    st.error("This file could not be read as an image. Please upload a PNG or JPG file.")
+if st.button("Try a random test image", icon=":material/shuffle:", type="primary"):
+    st.session_state["sample"] = random.choice(samples)
+
+if "sample" not in st.session_state:
+    st.info("Click **Try a random test image** to start.", icon=":material/shuffle:")
     st.stop()
+
+image_path, true_class_id = st.session_state["sample"]
+image = Image.open(image_path).convert("RGB")
 
 # ---------------------------------------------------------------
 # Predict and show the results
@@ -116,19 +107,19 @@ class_id, class_name, confidence, top3 = predict_image(image, model_name)
 
 image_col, result_col = st.columns(2)
 with image_col:
-    st.image(image, caption="Your image", width=220)
+    st.image(image, caption="Test image", width=220)
 
 with result_col:
     st.subheader(class_name)
     st.metric("Confidence", f"{confidence:.1%}")
     if confidence < config.LOW_CONFIDENCE:
         st.warning("Not sure: the model's confidence is below 50%. "
-                   "The image may be unclear or not a GTSRB sign.", icon=":material/help:")
-    if true_class_id is not None:
-        if true_class_id == class_id:
-            st.success("Correct! This matches the true label.", icon=":material/check_circle:")
-        else:
-            st.error(f"Wrong. The true label is class {true_class_id}.", icon=":material/cancel:")
+                   "The image may be very dark or blurry.", icon=":material/help:")
+    if true_class_id == class_id:
+        st.success("Correct! This matches the true label.", icon=":material/check_circle:")
+    else:
+        true_name = load_sign_names()[true_class_id]
+        st.error(f"Wrong. The true sign is: {true_name}.", icon=":material/cancel:")
     show_reference_sign(class_id)
 
 st.subheader("Top 3 predictions")

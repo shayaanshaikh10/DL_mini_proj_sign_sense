@@ -22,8 +22,8 @@ ABSTRACT = [
     "CNN with batch normalization achieved 98.60% accuracy on the official test set using only "
     "487,243 parameters. MobileNetV2 reached 88.30% after fine-tuning its top 60 layers, and only "
     "66.75% with light fine-tuning. Error analysis shows that most mistakes involve triangular "
-    "warning signs with small, similar symbols and rare classes. A Streamlit web application lets "
-    "users upload a sign image and see the predicted sign, its confidence and the top-3 predictions.",
+    "warning signs with small, similar symbols and rare classes. A Streamlit web application shows "
+    "the model's prediction, confidence and top-3 predictions for unseen test images."
 ]
 
 CHAPTERS = [
@@ -48,8 +48,8 @@ CHAPTERS = [
           "designed for mobile devices. Our models also use batch normalization [3], dropout [4] and "
           "the Adam optimizer [5]."),
     ("p", "This project builds a small CNN from scratch, compares it with MobileNetV2 transfer "
-          "learning, analyses the errors, and provides a web demo that predicts the sign in an "
-          "uploaded image."),
+          "learning, analyses the errors, and provides a web demo that predicts the sign in unseen "
+          "test images."),
 
     # ---------------------------------------------------------------
     ("h1", "2. Problem Statement"),
@@ -62,7 +62,7 @@ CHAPTERS = [
         "Build a second model using transfer learning (MobileNetV2) and compare it with the custom CNN.",
         "Evaluate both models with accuracy and loss curves, a confusion matrix, per-class "
         "precision, recall and F1-score, and analysis of wrong predictions.",
-        "Build a web demo where a user uploads a sign image and gets the predicted sign and confidence.",
+        "Build a web demo that shows the predicted sign and its confidence for test images.",
         "Produce clean, documented and reproducible code.",
     ]),
     ("h2", "2.2 Dataset"),
@@ -83,7 +83,7 @@ CHAPTERS = [
     ("h1", "3. Proposed System"),
     ("h2", "3.1 Block diagram, its description and working"),
     ("figure", "results/block_diagram.png", 6.2, "Fig. 3.1: Block diagram of SignSense"),
-    ("p", "**Working:** An input image (from the dataset or uploaded in the app) is read with OpenCV, "
+    ("p", "**Working:** An input image (from the dataset, or a test image chosen in the app) is read with OpenCV, "
           "converted from BGR to RGB and resized to 32x32 pixels for the custom CNN or 96x96 pixels "
           "for MobileNetV2. Pixel values are scaled (divided by 255 for the CNN; scaled to -1..1 for "
           "MobileNetV2) and labels are one-hot encoded."),
@@ -114,7 +114,7 @@ CHAPTERS = [
         ["evaluate.py", "Test accuracy, training curves, confusion matrix, per-class report, wrong predictions."],
         ["compare.py", "Comparison table and chart of all trained models."],
         ["predict.py", "predict_image(): predicts the sign in one image with the training preprocessing."],
-        ["app/app.py", "Streamlit web app: upload, model choice, prediction, confidence, top-3 chart."],
+        ["app/app.py", "Streamlit web app: random test image, model choice, prediction, confidence, top-3 chart."],
     ], [2000, 7000]),
 
     # ---------------------------------------------------------------
@@ -196,9 +196,11 @@ CHAPTERS = [
           "ImageNet features do not transfer well to tiny, low-resolution sign images and that "
           "fine-tuning is essential. The remaining errors come mainly from similar triangular warning "
           "signs, rare classes and poor image quality. A Streamlit web app demonstrates the model on "
-          "uploaded images."),
+          "unseen test images."),
     ("h2", "6.1 Limitations and Future Scope"),
     ("bullets", [
+        "The models only know the 43 GTSRB classes: a sign from outside these classes is still "
+        "forced into the closest known class, so the demo uses test images only.",
         "The models classify already cropped signs; real-time detection in full camera frames could "
         "be added with an object detector such as YOLO.",
         "Video input from a dashcam, combining predictions over several frames.",

@@ -127,10 +127,13 @@ model and results into `models/` and `results/`.
 streamlit run app/app.py
 ```
 
-Opens at http://localhost:8501. Upload a sign image (or click **Try a random test image**),
-choose a model in the sidebar, and see the predicted sign, the confidence, a "not sure"
-warning below 50% and the top-3 predictions. The models expect a cropped sign like the
-GTSRB images, not a full street scene.
+Opens at http://localhost:8501. Click **Try a random test image** to pick one of the 12,630
+test images (never seen during training), choose a model in the sidebar, and see the predicted
+sign, the confidence, whether it matches the true label, a "not sure" warning below 50% and
+the top-3 predictions.
+
+There is no upload option on purpose: the models only know the 43 GTSRB classes, so any other
+sign (for example from another country) would still be forced into one of those classes.
 
 To predict from the command line:
 
